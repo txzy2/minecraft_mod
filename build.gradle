@@ -23,6 +23,19 @@ loom {
 			sourceSet sourceSets.client
 		}
 	}
+
+	runs {
+        client {
+            client()
+            setConfigName("Minecraft Client")
+            ideConfigGenerated(true)
+            runDir("run")
+            
+            // Настройка размера окна
+            property("fabric.run.client.width", "1290")
+            property("fabric.run.client.height", "780")
+        }
+	}
 }
 
 dependencies {

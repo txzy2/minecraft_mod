@@ -1,17 +1,21 @@
 package com.example.item.custom;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.example.util.PlayerHelper;
+
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -53,36 +57,61 @@ public class MagicStick extends Item {
         };
 
         player.sendSystemMessage(Component.literal("Режим: " + currentMode));
+        player.playSound(
+                SoundEvents.EXPERIENCE_ORB_PICKUP,
+                0.5f,
+                1.0f);
 
         return super.use(level, player, interactionHand);
     }
 
-    @Override
-    public InteractionResult useOn(UseOnContext context) {
-        Level world = context.getLevel();
-        if (world.isClientSide()) {
-            return InteractionResult.PASS;
-        }
+    // TODO: Перенести логику эту на use а для смены режима сделать бинд
+    // @Override
+    // public InteractionResult useOn(UseOnContext context) {
+    // Level world = context.getLevel();
+    // if (world.isClientSide()) {
+    // return InteractionResult.PASS;
+    // }
 
-        ItemStack stack = context.getItemInHand();
+    // Player player = context.getPlayer();
+    // if (player == null) {
+    // return InteractionResult.PASS;
+    // }
 
-        if (currentMode == Mode.HEAL) {
-            int currentDamage = stack.getDamageValue();
-            stack.setDamageValue(currentDamage + 1);
+    // ItemStack stack = context.getItemInHand();
 
-            if (stack.getDamageValue() >= stack.getMaxDamage()) {
-                stack.shrink(1);
-            }
-        }
+    // if (currentMode == Mode.HEAL) {
+    // float healAmount = 4.0f;
 
-        return InteractionResult.SUCCESS;
-    }
+    // if (player.getHealth() < player.getMaxHealth()) {
+    // player.heal(healAmount);
+    // player.playSound(SoundEvents.PLAYER_LEVELUP, 0.7f, 1.0f);
 
-    private List<MobEffectInstance> getNegativeEffects(Player player) {
-        return player.getActiveEffects().stream()
-                .filter(effectInstance -> effectInstance.getEffect().value().getCategory() == MobEffectCategory.HARMFUL)
-                .collect(Collectors.toList());
-    }
+    // if (world instanceof ServerLevel serverLevel) {
+    // serverLevel.sendParticles(
+    // ParticleTypes.HEART,
+    // player.getX(),
+    // player.getY() + 1.0,
+    // player.getZ(),
+    // 8,
+    // 0.5, 0.5, 0.5,
+    // 0.0);
+    // }
+
+    // stack.setDamageValue(stack.getDamageValue() + 1);
+
+    // if (stack.getDamageValue() >= stack.getMaxDamage()) {
+    // stack.shrink(1);
+    // }
+
+    // return InteractionResult.SUCCESS;
+    // }
+
+    // return InteractionResult.PASS;
+    // }
+
+    // return InteractionResult.PASS;
+    // }
 
     private float getPenaltyForEffect(MobEffect effect) {
         if (effect == MobEffects.POISON.value() || effect == MobEffects.WITHER.value()) {
@@ -105,7 +134,7 @@ public class MagicStick extends Item {
                 float finalDamage = baseDamage;
 
                 if (attacker instanceof Player player) {
-                    List<MobEffectInstance> negativeEffects = getNegativeEffects(player);
+                    List<MobEffectInstance> negativeEffects = PlayerHelper.getNegativeEffects(player);
 
                     if (!negativeEffects.isEmpty()) {
                         float penaltyDamage = negativeEffects.stream()
