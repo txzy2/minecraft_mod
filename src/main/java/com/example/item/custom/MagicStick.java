@@ -103,12 +103,9 @@ public class MagicStick extends Item {
     }
 
     private float getPenaltyForEffect(MobEffect effect) {
-        if (
-                effect == MobEffects.POISON.value() ||
-                        effect == MobEffects.WITHER.value()
-        ) {
+        if (effect == MobEffects.POISON.value() || effect == MobEffects.WITHER.value()) {
             return baseDamage * 0.5f; // 50% от урона
-        } else if (effect == MobEffects.WEAKNESS.value()) {
+        } else if (effect == MobEffects.WEAKNESS.value() || effect == MobEffects.MOVEMENT_SLOWDOWN.value()) {
             return baseDamage * 0.3f; // 30% от урона
         }
         return baseDamage * 0.1f; // 10% от урона (для любых других эффектов)
