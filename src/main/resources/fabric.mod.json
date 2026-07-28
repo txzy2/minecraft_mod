@@ -18,9 +18,7 @@
 		"main": [
 			"com.example.ExampleMod"
 		],
-		"client": [
-			"com.example.client.ExampleModClient"
-		]
+		"client": ["com.example.client.ExampleModClient", "com.example.client.KeyBindings"]
 	},
 	"mixins": [
 		"modid.mixins.json",

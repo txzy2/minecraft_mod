@@ -8,10 +8,8 @@ import org.slf4j.LoggerFactory;
 import com.example.util.PlayerHelper;
 
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -24,6 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+
 
 public class MagicStick extends Item {
     public static final int DURABILITY = 256;
@@ -50,68 +49,54 @@ public class MagicStick extends Item {
             return InteractionResultHolder.pass(player.getItemInHand(interactionHand));
         }
 
-        currentMode = switch (currentMode) {
-            case FIRE -> Mode.HEAL;
-            case HEAL -> Mode.FIRE;
-            default -> Mode.FIRE;
-        };
+        ItemStack stack = player.getItemInHand(interactionHand);
 
-        player.sendSystemMessage(Component.literal("Режим: " + currentMode));
-        player.playSound(
-                SoundEvents.EXPERIENCE_ORB_PICKUP,
-                0.5f,
-                1.0f);
+        if (currentMode == Mode.HEAL) {
+            float healAmount = 4.0f;
 
-        return super.use(level, player, interactionHand);
+            if (player.getHealth() < player.getMaxHealth()) {
+                player.heal(healAmount);
+                player.playSound(SoundEvents.PLAYER_LEVELUP, 0.7f, 1.0f);
+
+                if (level instanceof ServerLevel serverLevel) {
+                    serverLevel.sendParticles(
+                            ParticleTypes.HEART,
+                            player.getX(),
+                            player.getY() + 1.0,
+                            player.getZ(),
+                            8,
+                            0.5, 0.5, 0.5,
+                            0.0);
+                }
+
+                stack.setDamageValue(stack.getDamageValue() + 1);
+
+                if (stack.getDamageValue() >= stack.getMaxDamage()) {
+                    stack.shrink(1);
+                }
+
+                return InteractionResultHolder.success(stack);
+            }
+        }
+
+        return InteractionResultHolder.pass(stack);
+    }
+    public void cycleMode() {
+        switch (currentMode) {
+            case FIRE -> currentMode = Mode.HEAL;
+            case HEAL -> currentMode = Mode.FIRE;
+        }
     }
 
-    // TODO: Перенести логику эту на use а для смены режима сделать бинд
-    // @Override
-    // public InteractionResult useOn(UseOnContext context) {
-    // Level world = context.getLevel();
-    // if (world.isClientSide()) {
-    // return InteractionResult.PASS;
-    // }
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        Level world = context.getLevel();
+        if (world.isClientSide()) {
+            return InteractionResult.PASS;
+        }
 
-    // Player player = context.getPlayer();
-    // if (player == null) {
-    // return InteractionResult.PASS;
-    // }
-
-    // ItemStack stack = context.getItemInHand();
-
-    // if (currentMode == Mode.HEAL) {
-    // float healAmount = 4.0f;
-
-    // if (player.getHealth() < player.getMaxHealth()) {
-    // player.heal(healAmount);
-    // player.playSound(SoundEvents.PLAYER_LEVELUP, 0.7f, 1.0f);
-
-    // if (world instanceof ServerLevel serverLevel) {
-    // serverLevel.sendParticles(
-    // ParticleTypes.HEART,
-    // player.getX(),
-    // player.getY() + 1.0,
-    // player.getZ(),
-    // 8,
-    // 0.5, 0.5, 0.5,
-    // 0.0);
-    // }
-
-    // stack.setDamageValue(stack.getDamageValue() + 1);
-
-    // if (stack.getDamageValue() >= stack.getMaxDamage()) {
-    // stack.shrink(1);
-    // }
-
-    // return InteractionResult.SUCCESS;
-    // }
-
-    // return InteractionResult.PASS;
-    // }
-
-    // return InteractionResult.PASS;
-    // }
+        return InteractionResult.PASS;
+    }
 
     private float getPenaltyForEffect(MobEffect effect) {
         if (effect == MobEffects.POISON.value() || effect == MobEffects.WITHER.value()) {
@@ -160,5 +145,9 @@ public class MagicStick extends Item {
 
     public static float getDamage() {
         return baseDamage;
+    }
+
+    public Mode getCurrentMode() {
+        return currentMode;
     }
 }
