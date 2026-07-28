@@ -64,11 +64,7 @@ public class MagicStick extends Item {
                             player.getX(),
                             player.getY() + 1.0,
                             player.getZ(),
-                            8,
-                            0.5,
-                            0.5,
-                            0.5,
-                            0.0
+                            8, 0.5, 0.5, 0.5, 0.0
                     );
                 }
 
@@ -112,11 +108,7 @@ public class MagicStick extends Item {
     }
 
     @Override
-    public boolean hurtEnemy(
-            ItemStack stack,
-            LivingEntity target,
-            LivingEntity attacker
-    ) {
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (stack.isEmpty()) return false;
 
         switch (currentMode) {
@@ -125,12 +117,10 @@ public class MagicStick extends Item {
                 float finalDamage = baseDamage;
 
                 if (attacker instanceof Player player) {
-                    List<MobEffectInstance> negativeEffects =
-                            PlayerHelper.getNegativeEffects(player);
+                    List<MobEffectInstance> negativeEffects = PlayerHelper.getNegativeEffects(player);
 
                     if (!negativeEffects.isEmpty()) {
-                        float penaltyDamage = negativeEffects
-                                .stream()
+                        float penaltyDamage = negativeEffects.stream()
                                 .map((MobEffectInstance val) -> getPenaltyForEffect(val.getEffect().value()))
                                 .reduce(0.0f, Float::sum);
 
