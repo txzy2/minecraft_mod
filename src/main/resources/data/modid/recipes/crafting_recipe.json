@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  #",
+    " / ",
+    "=  "
+  ],
+  "key": {
+    "#": "minecraft:diamond",
+    "/": "minecraft:stick",
+    "=": "minecraft:gold_ingot"
+  },
+  "result": {
+    "id": "modid:magic_stick",
+    "count": 1
+  }
+}

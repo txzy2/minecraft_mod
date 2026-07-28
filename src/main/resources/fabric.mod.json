@@ -14,8 +14,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.example.ExampleMod",
-      "com.example.cosmic_energy.CosmicEnergyInitializer"
+      "com.example.ExampleMod"
     ],
     "client": [
       "com.example.client.ExampleModClient",

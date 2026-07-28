@@ -1,5 +1,6 @@
 {
   "item.modid.magic_stick": "Magic Stick",
   "key.modid.mode_switch": "Switch Mode",
-  "key.category.modid": "Magic Mod"
+  "key.category.modid": "Magic Mod",
+  "item.modid.magic_stick.tooltip": "A magical stick that can switch between different modes."
 }

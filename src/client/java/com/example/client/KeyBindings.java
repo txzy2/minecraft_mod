@@ -32,8 +32,7 @@ public class KeyBindings implements ClientModInitializer {
 
                 // Проверяем, что в руке наша палочка
                 if (mainHand.getItem() instanceof MagicStick magicStick) {
-                    magicStick.cycleMode();
-                    // Отправляем запрос на сервер
+                    magicStick.cycleMode(mainHand);
                     ModeSwitchPacket.send();
                 } else {
                     client.player.sendSystemMessage(Component.literal("Держите палочку в руке!"));

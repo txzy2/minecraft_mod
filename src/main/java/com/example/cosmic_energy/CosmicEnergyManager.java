@@ -1,32 +1,62 @@
 package com.example.cosmic_energy;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.server.MinecraftServer;
+
 public class CosmicEnergyManager {
 
-    private static final CosmicEnergyManager INSTANCE =
-        new CosmicEnergyManager();
+    private static final CosmicEnergyManager INSTANCE = new CosmicEnergyManager();
 
-    private float energy = 0;
-    private final float maxEnergy = 100;
+    private MinecraftServer server;
+    private float clientEnergy = 0;
 
-    private CosmicEnergyManager() {}
+    private CosmicEnergyManager() {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> this.server = server);
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> this.server = null);
+    }
 
     public static CosmicEnergyManager getInstance() {
         return INSTANCE;
     }
 
+    private CosmicEnergySavedData getSavedData() {
+        if (server == null) {
+            return null;
+        }
+        return CosmicEnergySavedData.get(server);
+    }
+
     public float getEnergy() {
-        return energy;
+        CosmicEnergySavedData data = getSavedData();
+        if (data != null) {
+            return data.getEnergy();
+        }
+        return clientEnergy;
     }
 
     public void setEnergy(float energy) {
-        this.energy = Math.max(0, Math.min(maxEnergy, energy));
+        CosmicEnergySavedData data = getSavedData();
+        if (data != null) {
+            data.setEnergy(energy);
+        } else {
+            clientEnergy = energy;
+        }
     }
 
     public void addEnergy(float amount) {
-        setEnergy(energy + amount);
+        CosmicEnergySavedData data = getSavedData();
+        if (data != null) {
+            data.addEnergy(amount);
+        } else {
+            clientEnergy = Math.max(0, Math.min(100, clientEnergy + amount));
+        }
+    }
+
+    public void setClientEnergy(float energy) {
+        this.clientEnergy = energy;
     }
 
     public float getMaxEnergy() {
-        return maxEnergy;
+        return 100;
     }
 }

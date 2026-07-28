@@ -2,7 +2,10 @@ package com.example.item.custom;
 
 import com.example.cosmic_energy.CosmicEnergyManager;
 import com.example.util.PlayerHelper;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -15,12 +18,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.level.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Random;
 
 public class MagicStick extends Item {
 
@@ -29,7 +36,9 @@ public class MagicStick extends Item {
     public static final int FIRE_TICKS = 100;
     public static final Logger LOGGER = LoggerFactory.getLogger("Magic Stick");
     protected static float baseDamage = 20.0f;
-    private Mode currentMode = Mode.FIRE;
+    protected static float healAmount = 5.0f;
+
+    private static final String MODE_KEY = "MagicStickMode";
 
     public MagicStick(Properties properties) {
         super(properties);
@@ -39,21 +48,42 @@ public class MagicStick extends Item {
         return baseDamage;
     }
 
+    public static Mode getMode(ItemStack stack) {
+        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
+        if (customData == null || !customData.contains(MODE_KEY)) {
+            return Mode.FIRE;
+        }
+
+        try {
+            return Mode.valueOf(customData.copyTag().getString(MODE_KEY));
+        } catch (IllegalArgumentException e) {
+            return Mode.FIRE;
+        }
+    }
+
+    public static void setMode(ItemStack stack, Mode mode) {
+        CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.putString(MODE_KEY, mode.name()));
+    }
+
+    public void cycleMode(ItemStack stack) {
+        Mode current = getMode(stack);
+        Mode next = switch (current) {
+            case FIRE -> Mode.HEAL;
+            case HEAL -> Mode.FIRE;
+        };
+        setMode(stack, next);
+    }
+
     @Override
-    public InteractionResultHolder<ItemStack> use(
-            Level level,
-            Player player,
-            InteractionHand interactionHand
-    ) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         if (level.isClientSide()) {
             return InteractionResultHolder.pass(player.getItemInHand(interactionHand));
         }
 
         ItemStack stack = player.getItemInHand(interactionHand);
+        Mode mode = getMode(stack);
 
-        if (currentMode == Mode.HEAL) {
-            float healAmount = 4.0f;
-
+        if (mode == Mode.HEAL) {
             if (player.getHealth() < player.getMaxHealth()) {
                 player.heal(healAmount);
                 player.playSound(SoundEvents.PLAYER_LEVELUP, 0.7f, 1.0f);
@@ -64,11 +94,10 @@ public class MagicStick extends Item {
                             player.getX(),
                             player.getY() + 1.0,
                             player.getZ(),
-                            8, 0.5, 0.5, 0.5, 0.0
-                    );
+                            8, 0.5, 0.5, 0.5, 0.0);
                 }
 
-                stack.setDamageValue(stack.getDamageValue() + 1);
+                stack.setDamageValue(stack.getDamageValue() + 10);
 
                 if (stack.getDamageValue() >= stack.getMaxDamage()) {
                     stack.shrink(1);
@@ -81,11 +110,17 @@ public class MagicStick extends Item {
         return InteractionResultHolder.pass(stack);
     }
 
-    public void cycleMode() {
-        switch (currentMode) {
-            case FIRE -> currentMode = Mode.HEAL;
-            case HEAL -> currentMode = Mode.FIRE;
-        }
+    @Override
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list,
+            TooltipFlag tooltipFlag) {
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
+        list.add(Component.translatable("item.modid.magic_stick.tooltip").withStyle(ChatFormatting.GRAY));
+        list.add(Component.literal("Current Mode: " + getMode(itemStack).name()).withStyle(ChatFormatting.YELLOW));
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return getMode(stack) == Mode.FIRE;
     }
 
     @Override
@@ -100,18 +135,21 @@ public class MagicStick extends Item {
 
     private float getPenaltyForEffect(MobEffect effect) {
         if (effect == MobEffects.POISON.value() || effect == MobEffects.WITHER.value()) {
-            return baseDamage * 0.5f; // 50% от урона
+            return baseDamage * 0.5f;
         } else if (effect == MobEffects.WEAKNESS.value() || effect == MobEffects.MOVEMENT_SLOWDOWN.value()) {
-            return baseDamage * 0.3f; // 30% от урона
+            return baseDamage * 0.3f;
         }
-        return baseDamage * 0.1f; // 10% от урона (для любых других эффектов)
+        return baseDamage * 0.1f;
     }
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (stack.isEmpty()) return false;
+        if (stack.isEmpty())
+            return false;
 
-        switch (currentMode) {
+        Mode mode = getMode(stack);
+
+        switch (mode) {
             case FIRE -> {
                 target.setRemainingFireTicks(FIRE_TICKS);
                 float finalDamage = baseDamage;
@@ -128,17 +166,15 @@ public class MagicStick extends Item {
                     }
                 }
 
-                if (attacker instanceof Player player) {
-                    // CosmicEnergyComponent energy = ModComponents.ENERGY.get(
-                    //     player
-                    // );
-
-                    CosmicEnergyManager.getInstance().addEnergy(0.5f);
-                }
+                Random r = new Random();
+                float randMana = 0.1f + r.nextFloat() * (0.5f - 0.1f);
+                CosmicEnergyManager.getInstance().addEnergy(Math.round(randMana * 10.0f) / 10.0f);
 
                 target.setHealth(target.getHealth() - finalDamage);
             }
-            case HEAL -> LOGGER.info("HEAL MODE (CURRENT DAMAGE 2)");
+            case HEAL -> {
+                LOGGER.info("HEAL MODE (CURRENT DAMAGE 1)");
+            }
         }
 
         stack.setDamageValue(stack.getDamageValue() + 1);
@@ -149,11 +185,7 @@ public class MagicStick extends Item {
         return true;
     }
 
-    public Mode getCurrentMode() {
-        return currentMode;
-    }
-
-    private enum Mode {
+    public enum Mode {
         FIRE,
         HEAL,
     }
