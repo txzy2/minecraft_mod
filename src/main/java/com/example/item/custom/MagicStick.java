@@ -1,9 +1,7 @@
 package com.example.item.custom;
 
-import com.example.cosmic_energy.CosmicEnergyComponent;
 import com.example.cosmic_energy.CosmicEnergyManager;
 import com.example.util.PlayerHelper;
-import java.util.List;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -22,37 +20,33 @@ import net.minecraft.world.level.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class MagicStick extends Item {
 
     public static final int DURABILITY = 256;
     public static final String ITEM_NAME = "magic_stick";
-
-    protected static float baseDamage = 20.0f;
     public static final int FIRE_TICKS = 100;
-
-    private enum Mode {
-        FIRE,
-        HEAL,
-    }
-
-    private Mode currentMode = Mode.FIRE;
-
     public static final Logger LOGGER = LoggerFactory.getLogger("Magic Stick");
+    protected static float baseDamage = 20.0f;
+    private Mode currentMode = Mode.FIRE;
 
     public MagicStick(Properties properties) {
         super(properties);
     }
 
+    public static float getDamage() {
+        return baseDamage;
+    }
+
     @Override
     public InteractionResultHolder<ItemStack> use(
-        Level level,
-        Player player,
-        InteractionHand interactionHand
+            Level level,
+            Player player,
+            InteractionHand interactionHand
     ) {
         if (level.isClientSide()) {
-            return InteractionResultHolder.pass(
-                player.getItemInHand(interactionHand)
-            );
+            return InteractionResultHolder.pass(player.getItemInHand(interactionHand));
         }
 
         ItemStack stack = player.getItemInHand(interactionHand);
@@ -66,15 +60,15 @@ public class MagicStick extends Item {
 
                 if (level instanceof ServerLevel serverLevel) {
                     serverLevel.sendParticles(
-                        ParticleTypes.HEART,
-                        player.getX(),
-                        player.getY() + 1.0,
-                        player.getZ(),
-                        8,
-                        0.5,
-                        0.5,
-                        0.5,
-                        0.0
+                            ParticleTypes.HEART,
+                            player.getX(),
+                            player.getY() + 1.0,
+                            player.getZ(),
+                            8,
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.0
                     );
                 }
 
@@ -110,8 +104,8 @@ public class MagicStick extends Item {
 
     private float getPenaltyForEffect(MobEffect effect) {
         if (
-            effect == MobEffects.POISON.value() ||
-            effect == MobEffects.WITHER.value()
+                effect == MobEffects.POISON.value() ||
+                        effect == MobEffects.WITHER.value()
         ) {
             return baseDamage * 0.5f; // 50% от урона
         } else if (effect == MobEffects.WEAKNESS.value()) {
@@ -122,27 +116,26 @@ public class MagicStick extends Item {
 
     @Override
     public boolean hurtEnemy(
-        ItemStack stack,
-        LivingEntity target,
-        LivingEntity attacker
+            ItemStack stack,
+            LivingEntity target,
+            LivingEntity attacker
     ) {
         if (stack.isEmpty()) return false;
 
         switch (currentMode) {
             case FIRE -> {
                 target.setRemainingFireTicks(FIRE_TICKS);
-
                 float finalDamage = baseDamage;
 
                 if (attacker instanceof Player player) {
                     List<MobEffectInstance> negativeEffects =
-                        PlayerHelper.getNegativeEffects(player);
+                            PlayerHelper.getNegativeEffects(player);
 
                     if (!negativeEffects.isEmpty()) {
                         float penaltyDamage = negativeEffects
-                            .stream()
-                            .map((MobEffectInstance val) -> getPenaltyForEffect(val.getEffect().value()))
-                            .reduce(0.0f, Float::sum);
+                                .stream()
+                                .map((MobEffectInstance val) -> getPenaltyForEffect(val.getEffect().value()))
+                                .reduce(0.0f, Float::sum);
 
                         finalDamage = Math.max(1.0f, baseDamage - penaltyDamage);
                     }
@@ -169,11 +162,12 @@ public class MagicStick extends Item {
         return true;
     }
 
-    public static float getDamage() {
-        return baseDamage;
-    }
-
     public Mode getCurrentMode() {
         return currentMode;
+    }
+
+    private enum Mode {
+        FIRE,
+        HEAL,
     }
 }

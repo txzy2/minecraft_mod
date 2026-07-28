@@ -14,12 +14,10 @@ public class EnergyHud {
         }
 
         float energy = CosmicEnergyManager.getInstance().getEnergy();
-
         float maxEnergy = CosmicEnergyManager.getInstance().getMaxEnergy();
 
         int x = 20;
         int y = 20;
-
         int width = 100;
         int height = 10;
 
