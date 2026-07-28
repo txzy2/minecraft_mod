@@ -17,7 +17,7 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"modid" {
+		"voidenergy" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
