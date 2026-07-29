@@ -7,7 +7,9 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.Vec3;
 
 public class ModeSwitchPacket {
 
@@ -27,10 +29,18 @@ public class ModeSwitchPacket {
         ServerPlayNetworking.registerGlobalReceiver(TYPE, (payload, context) -> {
             context.server().execute(() -> {
                 ServerPlayer player = context.player();
+
                 if (player != null) {
                     var stack = player.getMainHandItem();
+
                     if (stack.getItem() instanceof MagicStick magicStick) {
                         magicStick.cycleMode(stack);
+
+                        ServerLevel world = player.serverLevel();
+                        Vec3 pos = player.position().add(0, 1.5, 0);
+
+                        world.sendParticles(player, ExampleMod.SPARKLE_PARTICLE, false, pos.x, pos.y, pos.z, 40, 1.5,
+                                1.5, 1.5, 0.3);
                     }
                 }
             });
