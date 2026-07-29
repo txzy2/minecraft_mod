@@ -90,7 +90,7 @@ public class MagicStick extends Item {
                 player.heal(healAmount);
                 player.playSound(SoundEvents.PLAYER_LEVELUP, 0.7f, 1.0f);
 
-                //TODO: Сделать при MODE HEAL таймаут на применение
+                // TODO: Сделать при MODE HEAL таймаут на применение
                 if (level instanceof ServerLevel serverLevel) {
                     serverLevel.sendParticles(
                             ParticleTypes.HEART,
@@ -117,22 +117,26 @@ public class MagicStick extends Item {
 
     @Override
     public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list,
-                                TooltipFlag tooltipFlag) {
+            TooltipFlag tooltipFlag) {
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
         list.add(Component.translatable("item.voidenergy.magic_stick.tooltip").withStyle(ChatFormatting.GRAY));
 
         Mode mode = getMode(itemStack);
-        list.add(Component.translatable("item.voidenergy.magic_stick.mode", mode.name()).withStyle(ChatFormatting.YELLOW));
+        list.add(Component.translatable("item.voidenergy.magic_stick.mode", mode.name())
+                .withStyle(ChatFormatting.YELLOW));
 
         if (mode == Mode.FIRE) {
-            list.add(Component.translatable("item.voidenergy.magic_stick.damage", (int) baseDamage).withStyle(ChatFormatting.RED));
+            list.add(Component.translatable("item.voidenergy.magic_stick.damage", (int) baseDamage)
+                    .withStyle(ChatFormatting.RED));
             list.add(Component.empty());
-            list.add(Component.translatable("item.voidenergy.magic_stick.debuff_header").withStyle(ChatFormatting.DARK_RED));
+            list.add(Component.translatable("item.voidenergy.magic_stick.debuff_header")
+                    .withStyle(ChatFormatting.DARK_RED));
             list.add(Component.translatable("item.voidenergy.magic_stick.debuff_50").withStyle(ChatFormatting.RED));
             list.add(Component.translatable("item.voidenergy.magic_stick.debuff_30").withStyle(ChatFormatting.RED));
             list.add(Component.translatable("item.voidenergy.magic_stick.debuff_10").withStyle(ChatFormatting.RED));
         } else if (mode == Mode.HEAL) {
-            list.add(Component.translatable("item.voidenergy.magic_stick.heal", (int) healAmount).withStyle(ChatFormatting.GREEN));
+            list.add(Component.translatable("item.voidenergy.magic_stick.heal", (int) healAmount)
+                    .withStyle(ChatFormatting.GREEN));
         }
     }
 

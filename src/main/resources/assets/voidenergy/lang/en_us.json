@@ -1,14 +1,14 @@
 {
-  "item.voidenergy.magic_stick": "Magic Stick",
-  "key.voidenergy.mode_switch": "Switch Mode",
-  "key.category.voidenergy": "Void Energy",
-  "item.voidenergy.magic_stick.tooltip": "A magical stick that can switch between different modes.",
-  "item.voidenergy.magic_stick.mode": "Current Mode: %s",
-  "item.voidenergy.magic_stick.damage": "Damage: %d",
-  "item.voidenergy.magic_stick.debuff_header": "Debuff penalties:",
-  "item.voidenergy.magic_stick.debuff_50": " -50%%: Poison, Wither",
-  "item.voidenergy.magic_stick.debuff_30": " -30%%: Weakness, Slowness",
-  "item.voidenergy.magic_stick.debuff_10": " -10%%: Other negative effects",
-  "item.voidenergy.magic_stick.heal": "Heal: +%d HP",
-  "hud.voidenergy.cosmic_energy": "Cosmic energy: %s/%d"
+    "hud.voidenergy.cosmic_energy": "Cosmic energy: %s/%d",
+    "item.voidenergy.magic_stick": "Magic Stick",
+    "item.voidenergy.magic_stick.damage": "Damage: %d",
+    "item.voidenergy.magic_stick.debuff_10": " -10%%: Other negative effects",
+    "item.voidenergy.magic_stick.debuff_30": " -30%%: Weakness, Slowness",
+    "item.voidenergy.magic_stick.debuff_50": " -50%%: Poison, Wither",
+    "item.voidenergy.magic_stick.debuff_header": "Debuff penalties:",
+    "item.voidenergy.magic_stick.heal": "Heal: +%d HP",
+    "item.voidenergy.magic_stick.mode": "Current Mode: %s",
+    "item.voidenergy.magic_stick.tooltip": "A magical stick that can switch between different modes.",
+    "key.category.voidenergy": "Void Energy",
+    "key.voidenergy.mode_switch": "Switch Mode"
 }
