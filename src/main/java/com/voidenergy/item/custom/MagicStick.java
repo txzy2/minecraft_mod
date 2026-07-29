@@ -36,10 +36,9 @@ public class MagicStick extends Item {
     public static final String ITEM_NAME = "magic_stick";
     public static final int FIRE_TICKS = 100;
     public static final Logger LOGGER = LoggerFactory.getLogger("Magic Stick");
+    private static final String MODE_KEY = "MagicStickMode";
     protected static float baseDamage = 20.0f;
     protected static float healAmount = 5.0f;
-
-    private static final String MODE_KEY = "MagicStickMode";
 
     public MagicStick(Properties properties) {
         super(properties);
@@ -91,6 +90,7 @@ public class MagicStick extends Item {
                 player.heal(healAmount);
                 player.playSound(SoundEvents.PLAYER_LEVELUP, 0.7f, 1.0f);
 
+                //TODO: Сделать при MODE HEAL таймаут на применение
                 if (level instanceof ServerLevel serverLevel) {
                     serverLevel.sendParticles(
                             ParticleTypes.HEART,
@@ -117,7 +117,7 @@ public class MagicStick extends Item {
 
     @Override
     public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list,
-            TooltipFlag tooltipFlag) {
+                                TooltipFlag tooltipFlag) {
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
         list.add(Component.translatable("item.voidenergy.magic_stick.tooltip").withStyle(ChatFormatting.GRAY));
 
@@ -189,11 +189,18 @@ public class MagicStick extends Item {
                 CosmicEnergyManager.getInstance().addEnergy(Math.round(randMana * 10.0f) / 10.0f);
 
                 if (attacker instanceof Player player) {
+                    target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 0));
                     target.hurt(target.damageSources().playerAttack(player), finalDamage);
                 }
             }
             case HEAL -> {
-                LOGGER.info("HEAL MODE (CURRENT DAMAGE 1)");
+                if (target instanceof Player player && player.getHealth() < player.getMaxHealth()) {
+                    LOGGER.info("HEAL PEACEFUL PLAYER");
+                    player.heal(3.0F);
+                    CosmicEnergyManager.getInstance().addEnergy(5.0F);
+                }
+
+                LOGGER.info("HEAL MODE");
             }
         }
 
