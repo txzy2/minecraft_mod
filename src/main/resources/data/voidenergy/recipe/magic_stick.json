@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  V",
+    " S ",
+    "D  "
+  ],
+  "key": {
+    "V": { "item": "voidenergy:void_rune" },
+    "S": { "item": "minecraft:stick" },
+    "D": { "item": "minecraft:diamond" }
+  },
+  "result": {
+    "id": "voidenergy:magic_stick"
+  }
+}
+

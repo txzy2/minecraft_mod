@@ -2,8 +2,8 @@
 	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "voidenergy:item/magic_stick",
-		"particle": "voidenergy:item/magic_stick"
+		"0": "voidenergy:item/void",
+		"particle": "voidenergy:item/void"
 	},
 	"elements": [
 		{
