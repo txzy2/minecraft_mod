@@ -1,6 +1,7 @@
 {
     "hud.voidenergy.cosmic_energy": "Cosmic energy: %s/%d",
     "item.voidenergy.magic_stick": "Magic Stick",
+    "item.voidenergy.void": "Void Orb",
     "item.voidenergy.magic_stick.damage": "Damage: %d",
     "item.voidenergy.magic_stick.debuff_10": " -10%%: Other negative effects",
     "item.voidenergy.magic_stick.debuff_30": " -30%%: Weakness, Slowness",
