@@ -1,14 +1,14 @@
 {
-    "hud.voidenergy.cosmic_energy": "Космическая энергия: %s/%d",
-    "item.voidenergy.magic_stick": "Магическая палочка",
-    "item.voidenergy.magic_stick.damage": "Урон: %d",
-    "item.voidenergy.magic_stick.debuff_10": " -10%%: Другие негативные эффекты",
-    "item.voidenergy.magic_stick.debuff_30": " -30%%: Слабость, Замедление",
-    "item.voidenergy.magic_stick.debuff_50": " -50%%: Отравление, Иссушение",
-    "item.voidenergy.magic_stick.debuff_header": "Штрафы за эффекты:",
-    "item.voidenergy.magic_stick.heal": "Лечение: +%d HP",
-    "item.voidenergy.magic_stick.mode": "Текущий режим: %s",
-    "item.voidenergy.magic_stick.tooltip": "Магическая палочка, позволяющая переключаться между разными режимами.",
-    "key.category.voidenergy": "Энергия Бездны",
-    "key.voidenergy.mode_switch": "Сменить режим"
+  "hud.voidenergy.cosmic_energy": "Косм. энергия: %s/%d",
+  "item.voidenergy.magic_stick": "Магическая палочка",
+  "item.voidenergy.magic_stick.damage": "Урон: %d",
+  "item.voidenergy.magic_stick.debuff_10": " -10%%: Другие негативные эффекты",
+  "item.voidenergy.magic_stick.debuff_30": " -30%%: Слабость, Замедление",
+  "item.voidenergy.magic_stick.debuff_50": " -50%%: Отравление, Иссушение",
+  "item.voidenergy.magic_stick.debuff_header": "Штрафы за эффекты:",
+  "item.voidenergy.magic_stick.heal": "Лечение: +%d HP",
+  "item.voidenergy.magic_stick.mode": "Текущий режим: %s",
+  "item.voidenergy.magic_stick.tooltip": "Магическая палочка, позволяющая переключаться между разными режимами.",
+  "key.category.voidenergy": "Энергия Бездны",
+  "key.voidenergy.mode_switch": "Сменить режим"
 }

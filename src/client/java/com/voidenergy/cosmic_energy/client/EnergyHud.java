@@ -1,6 +1,7 @@
 package com.voidenergy.cosmic_energy.client;
 
 import com.voidenergy.cosmic_energy.CosmicEnergyManager;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -20,7 +21,7 @@ public class EnergyHud {
         int x = 20;
         int y = 20;
         int width = 100;
-        int height = 10;
+        int height = 5;
 
         guiGraphics.fill(x, y, x + width, y + height, 0xFF000000);
 
@@ -28,7 +29,7 @@ public class EnergyHud {
         progress = Math.max(0, Math.min(1, progress));
         int filled = (int) (progress * width);
 
-        guiGraphics.fill(x, y, x + filled, y + height, 0xFF00FFFF);
+        guiGraphics.fill(x, y, x + filled, y + height, 0xFF800080);
 
         Component text = Component.translatable("hud.voidenergy.cosmic_energy", String.format("%.1f", energy), (int) maxEnergy);
 
