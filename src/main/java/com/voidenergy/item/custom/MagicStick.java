@@ -1,9 +1,16 @@
 package com.voidenergy.item.custom;
 
+import java.util.List;
+import java.util.Random;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.voidenergy.cosmic_energy.CosmicEnergyManager;
 import com.voidenergy.util.PlayerHelper;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -19,15 +26,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.component.CustomData;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.Random;
 
 public class MagicStick extends Item {
 
@@ -187,7 +188,9 @@ public class MagicStick extends Item {
                 float randMana = 0.1f + r.nextFloat() * (0.5f - 0.1f);
                 CosmicEnergyManager.getInstance().addEnergy(Math.round(randMana * 10.0f) / 10.0f);
 
-                target.setHealth(target.getHealth() - finalDamage);
+                if (attacker instanceof Player player) {
+                    target.hurt(target.damageSources().playerAttack(player), finalDamage);
+                }
             }
             case HEAL -> {
                 LOGGER.info("HEAL MODE (CURRENT DAMAGE 1)");
