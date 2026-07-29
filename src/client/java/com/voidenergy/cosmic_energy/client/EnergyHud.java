@@ -19,13 +19,11 @@ public class EnergyHud {
 
         int x = 20;
         int y = 20;
-        int width = 120;
+        int width = 100;
         int height = 10;
 
-        // черный фон
         guiGraphics.fill(x, y, x + width, y + height, 0xFF000000);
 
-        // заполнение энергии
         float progress = energy / maxEnergy;
         progress = Math.max(0, Math.min(1, progress));
         int filled = (int) (progress * width);
@@ -33,6 +31,11 @@ public class EnergyHud {
         guiGraphics.fill(x, y, x + filled, y + height, 0xFF00FFFF);
 
         Component text = Component.translatable("hud.voidenergy.cosmic_energy", String.format("%.1f", energy), (int) maxEnergy);
-        guiGraphics.drawString(minecraft.font, text, x, y - 12, 0xFFFFFFFF);
+
+        float scale = 0.7f;
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().scale(scale, scale, 1.0f);
+        guiGraphics.drawString(minecraft.font, text, (int) (x / scale), (int) ((y - 12) / scale), 0xFFFFFFFF);
+        guiGraphics.pose().popPose();
     }
 }
