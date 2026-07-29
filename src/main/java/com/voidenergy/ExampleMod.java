@@ -3,6 +3,7 @@ package com.voidenergy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.voidenergy.cosmic_energy.CosmicEnergyManager;
 import com.voidenergy.item.ModItems;
 import com.voidenergy.network.ModeSwitchPacket;
 
@@ -15,6 +16,7 @@ public class ExampleMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Hello Fabric world!");
+		CosmicEnergyManager.getInstance();
 		ModItems.register();
 		ModeSwitchPacket.register();
 		LOGGER.info("Мой предмет зарегистрирован!");

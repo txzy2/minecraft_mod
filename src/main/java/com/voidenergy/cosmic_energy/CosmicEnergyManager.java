@@ -7,12 +7,24 @@ public class CosmicEnergyManager {
 
     private static final CosmicEnergyManager INSTANCE = new CosmicEnergyManager();
 
-    private MinecraftServer server;
-    private float clientEnergy = 0;
+    private volatile MinecraftServer server;
+    private volatile float clientEnergy = 0;
 
     private CosmicEnergyManager() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> this.server = server);
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> this.server = null);
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            this.server = server;
+            CosmicEnergySavedData data = CosmicEnergySavedData.get(server);
+            if (data != null) {
+                clientEnergy = data.getEnergy();
+            }
+        });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+            CosmicEnergySavedData data = getSavedData();
+            if (data != null) {
+                clientEnergy = data.getEnergy();
+            }
+            this.server = null;
+        });
     }
 
     public static CosmicEnergyManager getInstance() {
