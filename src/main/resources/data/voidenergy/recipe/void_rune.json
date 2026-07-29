@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": ["#o#", "DED", "#o#"],
+  "key": {
+    "#": {
+      "item": "minecraft:nether_star"
+    },
+    "o": {
+      "item": "minecraft:ender_pearl"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "E": {
+      "item": "minecraft:ender_eye"
+    }
+  },
+  "result": {
+    "id": "voidenergy:void_rune"
+  }
+}
