@@ -2,9 +2,7 @@
 	"required": true,
 	"package": "com.voidenergy.mixin",
 	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-		"ExampleMixin"
-	],
+	"mixins": ["ExampleMixin", "BlockMixin"],
 	"injectors": {
 		"defaultRequire": 1
 	},

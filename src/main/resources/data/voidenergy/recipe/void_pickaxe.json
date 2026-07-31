@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": ["VVV", " S ", " S "],
+  "key": {
+    "V": {
+      "item": "voidenergy:void_rune"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "voidenergy:void_pickaxe"
+  }
+}
