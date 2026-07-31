@@ -1,7 +1,14 @@
 package com.voidenergy.item.custom;
 
+import java.util.List;
+import java.util.Random;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.voidenergy.cosmic_energy.CosmicEnergyManager;
 import com.voidenergy.util.PlayerHelper;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
@@ -22,15 +29,10 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.Random;
 
 public class MagicStick extends Item {
 
-    public static final int DURABILITY = 256;
+    public static final int DURABILITY = 1024;
     public static final String ITEM_NAME = "magic_stick";
     public static final int FIRE_TICKS = 100;
     public static final Logger LOGGER = LoggerFactory.getLogger("Magic Stick");
@@ -84,7 +86,8 @@ public class MagicStick extends Item {
         ItemStack stack = player.getItemInHand(interactionHand);
         Mode mode = getMode(stack);
 
-        if (mode == Mode.HEAL && player.getHealth() < player.getMaxHealth() && cosmicEnergyManager.getEnergy() >= 10.0f) {
+        if (mode == Mode.HEAL && player.getHealth() < player.getMaxHealth()
+                && cosmicEnergyManager.getEnergy() >= 10.0f) {
             player.heal(healAmount);
             player.playSound(SoundEvents.PLAYER_LEVELUP, 0.7f, 1.0f);
 
@@ -114,7 +117,7 @@ public class MagicStick extends Item {
 
     @Override
     public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list,
-                                TooltipFlag tooltipFlag) {
+            TooltipFlag tooltipFlag) {
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
         list.add(Component.translatable("item.voidenergy.magic_stick.tooltip").withStyle(ChatFormatting.GRAY));
 
@@ -187,10 +190,7 @@ public class MagicStick extends Item {
 
                 Random r = new Random();
                 float randMana = 0.1f + r.nextFloat() * (0.5f - 0.1f);
-//                CosmicEnergyManager.getInstance().addEnergy(Math.round(randMana * 10.0f) / 10.0f);
-
-                //NOTE: DEV режим
-                CosmicEnergyManager.getInstance().addEnergy(10.0f);
+                CosmicEnergyManager.getInstance().addEnergy(Math.round(randMana * 10.0f) / 10.0f);
 
                 if (attacker instanceof Player player) {
                     target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 0));

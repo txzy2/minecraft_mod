@@ -26,7 +26,8 @@ public class ModeSwitchPacket {
     }
 
     public static void register() {
-        PayloadTypeRegistry.playC2S().register(TYPE, net.minecraft.network.codec.StreamCodec.unit(new ModeSwitchPayload()));
+        PayloadTypeRegistry.playC2S().register(TYPE,
+                net.minecraft.network.codec.StreamCodec.unit(new ModeSwitchPayload()));
 
         ServerPlayNetworking.registerGlobalReceiver(TYPE, (payload, context) -> {
             context.server().execute(() -> {
