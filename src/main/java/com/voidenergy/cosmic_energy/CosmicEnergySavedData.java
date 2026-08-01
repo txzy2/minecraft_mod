@@ -11,6 +11,7 @@ public class CosmicEnergySavedData extends SavedData {
     private static final String DATA_NAME = "voidenergy_cosmic_energy";
 
     private float energy = 0;
+    private static float maxEnergy = 100;
 
     public CosmicEnergySavedData() {
     }
@@ -37,7 +38,7 @@ public class CosmicEnergySavedData extends SavedData {
     }
 
     public void addEnergy(float amount) {
-        setEnergy(Math.max(0, Math.min(100, this.energy + amount)));
+        setEnergy(Math.max(0, Math.min(maxEnergy, energy + amount)));
     }
 
     public static CosmicEnergySavedData get(ServerLevel level) {
@@ -49,5 +50,13 @@ public class CosmicEnergySavedData extends SavedData {
 
     public static CosmicEnergySavedData get(MinecraftServer server) {
         return get(server.overworld());
+    }
+
+    public static void setMaxEnegry(float val) {
+        maxEnergy = val;
+    }
+
+    public static float getMaxEnergy() {
+        return maxEnergy;
     }
 }

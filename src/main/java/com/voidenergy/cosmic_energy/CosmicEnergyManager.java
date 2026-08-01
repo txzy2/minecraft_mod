@@ -69,6 +69,6 @@ public class CosmicEnergyManager {
     }
 
     public float getMaxEnergy() {
-        return 100;
+        return CosmicEnergySavedData.getMaxEnergy();
     }
 }

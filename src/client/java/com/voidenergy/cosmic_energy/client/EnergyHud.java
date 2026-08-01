@@ -1,5 +1,6 @@
 package com.voidenergy.cosmic_energy.client;
 
+import com.mojang.blaze3d.platform.Window;
 import com.voidenergy.cosmic_energy.CosmicEnergyManager;
 
 import net.minecraft.client.Minecraft;
@@ -18,10 +19,18 @@ public class EnergyHud {
         float energy = CosmicEnergyManager.getInstance().getEnergy();
         float maxEnergy = CosmicEnergyManager.getInstance().getMaxEnergy();
 
-        int x = 20;
-        int y = 20;
+        Window window = Minecraft.getInstance().getWindow();
+
         int width = 100;
         int height = 5;
+        int padding = 10;
+
+        int screenWidth = window.getGuiScaledWidth();
+        int screenHeight = window.getGuiScaledHeight();
+
+        // Вычисляем позицию (правый нижний угол)
+        int x = screenWidth - width - padding;
+        int y = screenHeight - height - padding;
 
         guiGraphics.fill(x, y, x + width, y + height, 0xFF000000);
 

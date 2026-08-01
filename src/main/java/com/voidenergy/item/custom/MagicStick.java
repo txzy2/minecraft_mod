@@ -32,7 +32,7 @@ import net.minecraft.world.level.Level;
 
 public class MagicStick extends Item {
 
-    public static final int DURABILITY = 1024;
+    public static final int DURABILITY = 2048;
     public static final String ITEM_NAME = "magic_stick";
     public static final int FIRE_TICKS = 100;
     public static final Logger LOGGER = LoggerFactory.getLogger("Magic Stick");
